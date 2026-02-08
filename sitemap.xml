@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://jimin1012.github.io/muhyun-toolbox/</loc></url>
-  <url><loc>https://jimin1012.github.io/muhyun-toolbox/tools/json-formatter/</loc></url>
-  <url><loc>https://jimin1012.github.io/muhyun-toolbox/tools/cron-helper/</loc></url>
-  <url><loc>https://jimin1012.github.io/muhyun-toolbox/about.html</loc></url>
-  <url><loc>https://jimin1012.github.io/muhyun-toolbox/privacy.html</loc></url>
+  <url><loc>https://jimin1012.github.io/dev-toolbox/</loc></url>
+  <url><loc>https://jimin1012.github.io/dev-toolbox/tools/json-formatter/</loc></url>
+  <url><loc>https://jimin1012.github.io/dev-toolbox/tools/cron-helper/</loc></url>
+  <url><loc>https://jimin1012.github.io/dev-toolbox/about.html</loc></url>
+  <url><loc>https://jimin1012.github.io/dev-toolbox/privacy.html</loc></url>
 </urlset>
