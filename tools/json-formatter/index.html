@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JSON 포매터/검증 — Dev Toolbox</title>
+  <meta name="description" content="JSON을 예쁘게 정렬(pretty), 미니파이(minify)하고 문법 오류를 검증합니다. 로컬 처리." />
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://jimin1012.github.io/muhyun-toolbox/tools/json-formatter/" />
+  <link rel="stylesheet" href="../../assets/style.css" />
+  <meta property="og:title" content="JSON 포매터/검증" />
+  <meta property="og:description" content="JSON pretty/minify/검증 — 로컬 처리" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand"><div class="logo" aria-hidden="true"></div><h1>JSON 포매터/검증</h1></div>
+      <nav>
+        <a href="../../index.html">홈</a>
+        <a href="../cron-helper/index.html">Cron 헬퍼</a>
+        <a href="../../about.html">About</a>
+        <a href="../../privacy.html">Privacy</a>
+      </nav>
+    </header>
+
+    <section class="card">
+      <h3>무엇을 할 수 있나요?</h3>
+      <ul>
+        <li>JSON 문법 검증(에러 메시지 포함)</li>
+        <li>Pretty(가독성 좋게 들여쓰기)</li>
+        <li>Minify(공백 제거)</li>
+        <li>결과 복사</li>
+      </ul>
+      <div class="notice">입력값은 브라우저 내에서만 처리됩니다(서버 전송 없음).</div>
+    </section>
+
+    <section class="card">
+      <label for="in">입력(JSON)</label>
+      <textarea id="in" rows="10" placeholder='{"hello":"world"}'></textarea>
+
+      <div class="row">
+        <button id="btnPretty">Pretty</button>
+        <button id="btnMinify" class="secondary">Minify</button>
+        <button id="btnValidate" class="secondary">Validate</button>
+        <button id="btnClear" class="danger">Clear</button>
+      </div>
+
+      <label for="out">출력</label>
+      <textarea id="out" rows="10" readonly></textarea>
+
+      <div class="row">
+        <button id="btnCopy" class="secondary">Copy Output</button>
+        <span id="status" class="small"></span>
+      </div>
+
+      <div id="err" class="notice error" style="display:none"></div>
+    </section>
+
+    <section class="card">
+      <h3>자주 하는 실수</h3>
+      <ul>
+        <li>마지막 쉼표(trailing comma) 때문에 깨지는 케이스</li>
+        <li>따옴표는 반드시 <code>"</code> (JSON은 작은따옴표 지원 안 함)</li>
+      </ul>
+      <p class="small">이 도구는 JSON5가 아니라 표준 JSON만 지원합니다.</p>
+    </section>
+
+    <footer class="footer">
+      <div><a href="../../index.html">홈으로</a></div>
+    </footer>
+  </div>
+
+  <script type="module">
+    import { qs, setText, copyToClipboard, safeJsonParse, prettyJson, minifyJson } from '../../assets/app.js';
+
+    const elIn = qs('#in');
+    const elOut = qs('#out');
+    const elErr = qs('#err');
+    const elStatus = qs('#status');
+
+    function showErr(msg){
+      if(!msg){ elErr.style.display='none'; elErr.textContent=''; return; }
+      elErr.style.display='block'; elErr.textContent = msg;
+    }
+
+    function setStatus(msg){ setText(elStatus, msg); setTimeout(()=>setText(elStatus,''), 1500); }
+
+    function getParsed(){
+      const r = safeJsonParse(elIn.value);
+      if(!r.ok){ showErr(r.err); return null; }
+      showErr('');
+      return r.value;
+    }
+
+    qs('#btnPretty').addEventListener('click', ()=>{
+      const v = getParsed(); if(!v) return;
+      elOut.value = prettyJson(v, 2);
+      setStatus('Pretty 완료');
+    });
+    qs('#btnMinify').addEventListener('click', ()=>{
+      const v = getParsed(); if(!v) return;
+      elOut.value = minifyJson(v);
+      setStatus('Minify 완료');
+    });
+    qs('#btnValidate').addEventListener('click', ()=>{
+      const v = getParsed();
+      if(!v) return;
+      setStatus('유효한 JSON입니다');
+    });
+    qs('#btnClear').addEventListener('click', ()=>{
+      elIn.value=''; elOut.value=''; showErr(''); setStatus('초기화');
+    });
+    qs('#btnCopy').addEventListener('click', async ()=>{
+      const ok = await copyToClipboard(elOut.value || '');
+      setStatus(ok ? '복사됨' : '복사 실패');
+    });
+
+    // sample
+    elIn.value = JSON.stringify({ example: true, now: new Date().toISOString(), items: [1,2,3], nested: { a: 1, b: "text" } });
+  </script>
+</body>
+</html>
